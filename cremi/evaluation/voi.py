@@ -9,13 +9,13 @@ import scipy.sparse as sparse
 def voi(reconstruction, groundtruth, ignore_reconstruction=[], ignore_groundtruth=[0]):
     """Return the conditional entropies of the variation of information metric. [1]
 
-    Let X be a reconstruction, and Y a ground truth labelling. The variation of 
+    Let X be a reconstruction, and Y a ground truth labelling. The variation of
     information between the two is the sum of two conditional entropies:
 
         VI(X, Y) = H(X|Y) + H(Y|X).
 
-    The first one, H(X|Y), is a measure of oversegmentation, the second one, 
-    H(Y|X), a measure of undersegmentation. These measures are referred to as 
+    The first one, H(X|Y), is a measure of oversegmentation, the second one,
+    H(Y|X), a measure of undersegmentation. These measures are referred to as
     the variation of information split or merge error, respectively.
 
     Parameters
@@ -35,7 +35,7 @@ def voi(reconstruction, groundtruth, ignore_reconstruction=[], ignore_groundtrut
 
     References
     ----------
-    [1] Meila, M. (2007). Comparing clusterings - an information based 
+    [1] Meila, M. (2007). Comparing clusterings - an information based
     distance. Journal of Multivariate Analysis 98, 873-895.
     """
     (hyxg, hxgy) = split_vi(reconstruction, groundtruth, ignore_reconstruction, ignore_groundtruth)
@@ -121,7 +121,7 @@ def vi_tables(x, y=None, ignore_x=[0], ignore_y=[0]):
 
     # Calculate log conditional probabilities and entropies
     lpygx = np.zeros(np.shape(px))
-    lpygx[nzx] = xlogx(divide_rows(nzpxy, nzpx)).sum(axis=1) 
+    lpygx[nzx] = xlogx(divide_rows(nzpxy, nzpx)).sum(axis=1).squeeze()
                         # \sum_x{p_{y|x} \log{p_{y|x}}}
     hygx = -(px*lpygx) # \sum_x{p_x H(Y|X=x)} = H(Y|X)
 
@@ -156,7 +156,7 @@ def contingency_table(seg, gt, ignore_seg=[0], ignore_gt=[0], norm=True):
         labeled `i` in `seg` and `j` in `gt`. (Or the proportion of such voxels
         if `norm=True`.)
     """
-    segr = seg.ravel() 
+    segr = seg.ravel()
     gtr = gt.ravel()
     ignored = np.zeros(segr.shape, np.bool)
     data = np.ones(len(gtr))

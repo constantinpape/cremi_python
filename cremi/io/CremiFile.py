@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import h5py
 import numpy as np
 from .. import Annotations
@@ -23,8 +25,8 @@ class CremiFile(object):
                 pass
 
     def __create_dataset(self, path, data, dtype, compression = None):
-        """Wrapper around h5py's create_dataset. Creates the group, if not 
-        existing. Deletes a previous dataset, if existing and not compatible. 
+        """Wrapper around h5py's create_dataset. Creates the group, if not
+        existing. Deletes a previous dataset, if existing and not compatible.
         Otherwise, replaces the dataset.
         """
 
@@ -37,7 +39,7 @@ class CremiFile(object):
 
             ds = self.h5file[path]
             if ds.dtype == dtype and ds.shape == np.array(data).shape:
-                print "overwriting existing dataset"
+                print("overwriting existing dataset")
                 self.h5file[path][:] = data[:]
                 return
 

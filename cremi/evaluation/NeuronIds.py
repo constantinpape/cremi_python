@@ -1,7 +1,8 @@
+from __future__ import print_function
 import numpy as np
-from border_mask import create_border_mask
-from voi import voi
-from rand import adapted_rand
+from .border_mask import create_border_mask
+from .voi import voi
+from .rand import adapted_rand
 
 class NeuronIds:
 
@@ -29,7 +30,7 @@ class NeuronIds:
 
         if self.border_threshold:
 
-            print "Computing border mask..."
+            print("Computing border mask...")
 
             self.gt = np.zeros(groundtruth.data.shape, dtype=np.uint64)
             create_border_mask(
@@ -37,19 +38,19 @@ class NeuronIds:
                 self.gt,
                 float(border_threshold)/groundtruth.resolution[1],
                 np.uint64(-1))
+            # FIXME this will mess up ignore label that does not come from border mask
+            # current voi and rand implementations don't work with np.uint64(-1) as
+            # background label, so we make it 0 here and bump all other labels
+            self.gt += 1
         else:
             self.gt = np.array(self.groundtruth.data).copy()
-
-        # current voi and rand implementations don't work with np.uint64(-1) as
-        # background label, so we make it 0 here and bump all other labels
-        self.gt += 1
 
     def voi(self, segmentation):
 
         assert list(segmentation.data.shape) == list(self.groundtruth.data.shape)
         assert list(segmentation.resolution) == list(self.groundtruth.resolution)
 
-        print "Computing VOI..."
+        print("Computing VOI...")
 
         return voi(np.array(segmentation.data), self.gt, ignore_groundtruth = [0])
 
@@ -58,6 +59,6 @@ class NeuronIds:
         assert list(segmentation.data.shape) == list(self.groundtruth.data.shape)
         assert list(segmentation.resolution) == list(self.groundtruth.resolution)
 
-        print "Computing RAND..."
+        print("Computing RAND...")
 
         return adapted_rand(np.array(segmentation.data), self.gt)
