@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import ndimage
 
+
 class Clefts:
 
     def __init__(self, test, truth):
@@ -12,23 +13,23 @@ class Clefts:
 
         self.test_clefts_mask = np.logical_or(test_clefts.data.value == 0xffffffffffffffff, self.truth_clefts_invalid)
         self.truth_clefts_mask = np.logical_or(truth_clefts.data.value == 0xffffffffffffffff, self.truth_clefts_invalid)
-	
+
         self.test_clefts_edt = ndimage.distance_transform_edt(self.test_clefts_mask, sampling=test_clefts.resolution)
         self.truth_clefts_edt = ndimage.distance_transform_edt(self.truth_clefts_mask, sampling=truth_clefts.resolution)
 
-    def count_false_positives(self, threshold = 200):
+    def count_false_positives(self, threshold=200):
 
         mask1 = np.invert(self.test_clefts_mask)
         mask2 = self.truth_clefts_edt > threshold
         false_positives = self.truth_clefts_edt[np.logical_and(mask1, mask2)]
-	return false_positives.size
+        return false_positives.size
 
-    def count_false_negatives(self, threshold = 200):
+    def count_false_negatives(self, threshold=200):
 
         mask1 = np.invert(self.truth_clefts_mask)
         mask2 = self.test_clefts_edt > threshold
         false_negatives = self.test_clefts_edt[np.logical_and(mask1, mask2)]
-	return false_negatives.size
+        return false_negatives.size
 
     def acc_false_positives(self):
 
@@ -53,4 +54,3 @@ class Clefts:
             'count': false_negatives.size,
             'median': np.median(false_negatives)}
         return stats
-
