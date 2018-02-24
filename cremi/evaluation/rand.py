@@ -9,8 +9,8 @@ import scipy.sparse as sparse
 def adapted_rand(seg, gt, all_stats=False):
     """Compute Adapted Rand error as defined by the SNEMI3D contest [1]
 
-    Formula is given as 1 - the maximal F-score of the Rand index 
-    (excluding the zero component of the original labels). Adapted 
+    Formula is given as 1 - the maximal F-score of the Rand index
+    (excluding the zero component of the original labels). Adapted
     from the SNEMI3D MATLAB script, hence the strange style.
 
     Parameters
@@ -41,8 +41,8 @@ def adapted_rand(seg, gt, all_stats=False):
     segB = np.ravel(seg)
     n = segA.size
 
-    n_labels_A = np.amax(segA) + 1
-    n_labels_B = np.amax(segB) + 1
+    n_labels_A = int(np.amax(segA)) + 1
+    n_labels_B = int(np.amax(segB)) + 1
 
     ones_data = np.ones(n)
 
